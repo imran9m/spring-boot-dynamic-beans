@@ -27,7 +27,7 @@ public class DemoConfig {
     private RestClient.Builder restClientBuilder;
 
     public DemoConfig() {
-        logger.info("DemoConfig Initialized!!!!");
+        logger.info("!!!!! DemoConfig Initialized !!!!");
     }
 
     @PostConstruct
@@ -35,7 +35,11 @@ public class DemoConfig {
         ConfigurableListableBeanFactory beanFactory = this.configurableApplicationContext.getBeanFactory();
         // iterate over properties and register new beans'
         for (DynamicRestBuilderProperties.CustomClient client : dynamicRestBuilderProperties.clients()) {
-            RestClient tempClient = restClientBuilder.clone().requestFactory(getClientHttpRequestFactory(client.connectionTimeout(), client.responseTimeout())).defaultHeader("user-agent", client.userAgent()).build();
+            RestClient tempClient = restClientBuilder
+                    .clone()
+                    .requestFactory(getClientHttpRequestFactory(client.connectionTimeout(), client.responseTimeout()))
+                    .defaultHeader("user-agent", client.userAgent())
+                    .build();
             beanFactory.autowireBean(tempClient);
             beanFactory.initializeBean(tempClient, client.clientName());
             beanFactory.registerSingleton(client.clientName(), tempClient);
